@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/styles/normalize.css">
+    <link rel="stylesheet" href="./assets/styles/index.css">
+    <title>Генератор мемов</title>
+</head>
+<body>
+    <header class="header">
+        <div class="header__title">Генератор мемов</div>
+    </header>
+    <main class="main">
+        <div class="container">
+            <div class="container__preview" id="preview">
+                
+            </div>
+            <div class="container__settings">
+                <div class="btn__upload">
+                    <label for="upload" id="upload-btn">Загрузить изображение</label>
+                    <input type="file" name="upload" id="upload">
+                </div>
+                <div class="settings__text" id="text-settings"></div>
+                <button class="btn__addText" id="addText-btn">Добавить текст</button>
+                <div class="settings__btns">
+                    <button class="settings__btns__dowload" id="download-btn">Сохранить</button>
+                    <button class="settings__btns__reset" id="reset-btn">
+                        <img class="settings__btns__reset__img" src="./assets/img/reset.svg" alt="reset">
+                        <span class="settings__btns__reset__txt">Сбросить</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <template id="template-text">
+        <!-- <textarea placeholder="Text 1" class="settings__text__textarea" id="textarea-1"></textarea>
+        <input type="color" name="color-1" class="settings__text__color" id="color-1">
+        <button class="settings__text__delete" id="deleteTextarea-btn" onclick="deleteTextarea(this)">
+            <img src="./assets/img/delete.svg" class="settings__text__delete__img" alt="delete">
+        </button> -->
+        <textarea  class="settings__text__textarea" ></textarea>
+        <input type="color" class="settings__text__color">
+        <button class="settings__text__delete" id="deleteTextarea-btn" onclick="deleteTextarea(this)">
+            <img src="./assets/img/delete.svg" class="settings__text__delete__img" alt="delete">
+        </button>
+    </template>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,23 +1,3 @@
-// upload image 
-
-let uploadBtn = document.querySelector("#upload");
-uploadBtn.addEventListener("change", function() {
-    let reader;
-    if (this.files && this.files[0]) {
-        reader = new FileReader();
-        reader.onload = (e) => {
-            // создаем img тэг
-            let bg = document.createElement('img');
-            bg.setAttribute('id', 'img-preview');
-            // отображаем загруженную картинку в preview
-            bg.src = e.target.result;
-            // добавляем элемент в DOM
-            document.getElementById('preview').appendChild(bg);
-        }
-        reader.readAsDataURL(this.files[0]);
-    }
-});
-
 const showTemplateText = () => {
     // template
     let tempText = document.querySelector("#template-text");
@@ -49,18 +29,46 @@ const showTemplateText = () => {
     let input = newContainer.querySelectorAll(".settings__text__color");
     input[0].setAttribute("id", colorID);
     input[0].setAttribute("name", colorID);
+    // edit-btn 
+    let edit = newContainer.querySelectorAll('.settings__text__btn');
+    let editID = 'edit-' + num;
+    edit[0].setAttribute("id", editID);
+    // menu
+    let menu = newContainer.querySelectorAll('.settings__text__menu');
+    let menuID = 'menu-' + num;
+    menu[0].setAttribute("id", menuID);
 }
+
+// добаляет текст и поле для ввода при нажатии на кнопку "добавить текст"
 
 document.getElementById("addText-btn").addEventListener('click', () => {
     showTemplateText();
 });
 
+// показывает и скрыввает редактор
+
+function showEditMenu(e) {
+    // id элемента, который был нажат
+    let id = e.id.slice(5);
+    let menuID = 'menu-' + id;
+    let menu = document.getElementById(menuID);
+    // показываем и скрываем в зависимости от видимости меню
+    if(menu.style.display == 'flex') {
+        menu.style.display = 'none';
+    } else {
+        menu.style.display = 'flex';
+    }
+}
+
+// удаляет текст 
+
 function deleteTextarea(e) {
+    // родительский элемент
     let parent = e.parentNode;
+    // удаляем элемент
     parent.remove();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    showTemplateText();
+window.addEventListener('DOMContentLoaded', () => {
     showTemplateText();
 });

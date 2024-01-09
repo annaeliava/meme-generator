@@ -13,17 +13,13 @@ let width;
 let height;
 // textareas
 let texts;
-let current_text_index = null;
 // главный массив, где храним стили и координаты текста
 let arr = [];
 let colorIDs = [];
 let rangeIDs = [];
 let fontStyleIds = [];
-// x/y
-let arrX = [];
-let arrY = [];
 
-const showTemplateText = () => {
+const showTemplateText = (placeholder) => {
     // template
     let tempText = document.querySelector("#template-text");
     // создаем контейнер для элементов из template
@@ -41,9 +37,11 @@ const showTemplateText = () => {
 
     let textarea = newContainer.querySelectorAll('.settings__text__textarea');
 
-    // placeholder 
+    // номер 
     let num = Number(document.getElementById('text-settings').children.length);
-    textarea[0].placeholder = 'Text ' + num;
+
+    // placeholder 
+    textarea[0].placeholder = placeholder;
     // id
     let id = 'textarea-' + num;
     textarea[0].setAttribute("id", id);
@@ -68,7 +66,7 @@ const showTemplateText = () => {
     let rangeID = 'range-' + num;
     rangeIDs.push(rangeID);
     range[0].setAttribute("id", rangeID);
-    // radio btns
+    // radio btns fontstyle
     let fontStyle = newContainer.querySelectorAll('.settings__text__menu__fontstyle__item');
     let fontStyleId = 'fontstyle-' + num;
     fontStyleIds.push(fontStyleId);
@@ -78,12 +76,9 @@ const showTemplateText = () => {
     fontStyle[0].setAttribute("id", fontStyleId);
     fontStyle[1].setAttribute("id", fontStyleId);
     fontStyle[2].setAttribute("id", fontStyleId);
-
-    return newContainer;
 }
 
 // показывает и скрывает редактор
-
 function showEditMenu(e) {
     // id элемента, который был нажат
     let id = e.id.slice(5);
@@ -156,6 +151,7 @@ function getTextareas() {
     // пушим новые значения
     for(let i=0; i<arrId.length; i++) {
         // radio btns проверяем, который checked
+        // fontstyle
         let fontStyleValue;
         let radioBtns = document.querySelectorAll(`input[name="${fontStyleIds[i]}"]`);
         for(let radioBtn of radioBtns) {
@@ -164,9 +160,20 @@ function getTextareas() {
                 break;
             }
         }
+
         // ширина текста
-        let measure = ctx.measureText(document.getElementById(`${arrId[i]}`).value);
-        let width = Math.ceil(measure.width);
+        let width = Math.ceil(ctx.measureText(document.getElementById(`${arrId[i]}`).value.trim()).width);
+        
+        let x;
+        let y;
+
+        if(i == 0) {
+            x = canvas.width/2 - width/2;
+            y = 50;
+        } else {
+            x = canvas.width/2 - width/2;
+            y = canvas.height - 50;
+        }
 
         arr.push({
             color: document.getElementById(`${colorIDs[i]}`).value,
@@ -176,37 +183,19 @@ function getTextareas() {
             height: document.getElementById(`${rangeIDs[i]}`).value,
             id: arr.length,
             isDragging: false,
-            startX: arrX[i],
-            startY: arrY[i],
+            startX: x,
+            startY: y,
             text: document.getElementById(`${arrId[i]}`).value.trim(),
             width: width
         });
     }
 
     drawTexts();
-    console.log(arrX)
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    arrX.push(100);
-    arrY.push(100);
-    showTemplateText();
-    arrX.push(canvas.width);
-    arrY.push(canvas.height);
-    showTemplateText();
-    // присваиваем функцию 
-    canvas.addEventListener('mousedown', mouse_down);
-    canvas.addEventListener('mousemove', mouse_move);
-    canvas.addEventListener('mouseup', mouse_up);
-    canvas.addEventListener('mouseover', mouse_over);
-});
-
-// добаляет текст и поле для ввода при нажатии на кнопку "добавить текст"
-
-document.getElementById("addText-btn").addEventListener('click', () => {
-    arrX.push(canvas.width/2);
-    arrY.push(canvas.height/2);
-    showTemplateText();
+    showTemplateText(`top text`);
+    showTemplateText(`bottom text`);
 });
 
 // индекс
@@ -253,96 +242,6 @@ function getColor(e) {
     let color = document.getElementById(e.id).value;
     arr[id].color = color;
     drawTexts();
-}
-
-// удаляет текст 
-function deleteTextarea(e) {
-    // родительский элемент
-    let parent = e.parentNode.parentNode;
-    let id = getID(e.parentNode, 5)
-    // удаляем элемент
-    parent.remove();
-    arr.splice(id, 1);
-    arrX.splice(id, 1);
-    arrY.splice(id, 1);
-    colorIDs.splice(id, 1);
-    rangeIDs.splice(id, 1);
-    // отображаем новую картинку
-    drawTexts();
-}
-
-let current;
-
-// mouse down event для canvas
-let mouse_down = function(e) {
-    console.log(`Mouse coordinates: (${e.clientX}, ${e.clientY})`);
-    arr.forEach(txt => {
-        console.log(`Text coordinates: (${txt.startX}, ${txt.startY})`);
-        console.log(`Text width: ${txt.width}, Text height: ${txt.height}`);
-        let rect = canvas.getBoundingClientRect();
-        let mouseX = e.clientX - rect.left;
-        let mouseY = e.clientY - rect.top;
-
-        if (
-            mouseX > txt.startX &&
-            mouseX < txt.startX + txt.width &&
-            mouseY > txt.startY &&
-            mouseY < txt.startY + txt.height
-        ) {
-            txt.isDragging = true;
-            canvas.style.cursor = 'pointer';
-            console.log('clicked');
-        } else {
-            canvas.style.cursor = 'default';
-        }
-    });
-}
-
-let mouse_up = function() {
-    arr.forEach(txt => {
-        if(txt.isDragging) {
-            arrX.splice(txt.id, 1, txt.startX);
-            arrY.splice(txt.id, 1, txt.startY)
-        }
-        drawTexts();
-    })
-    
-}
-
-// двигаем текст
-let mouse_move = function(e) {
-    arr.forEach(txt => {
-        if(txt.isDragging) {
-            let rect = canvas.getBoundingClientRect();
-            txt.startX = e.clientX - rect.left;
-            txt.startY = e.clientY - rect.top;
-            canvas.style.cursor = 'pointer';
-        } else {
-            canvas.style.cursor = 'default';
-        }
-    });
-}
-
-let mouse_over = function(e) {
-    arr.forEach(txt => {
-        console.log(`Text coordinates: (${txt.startX}, ${txt.startY})`);
-        console.log(`Text width: ${txt.width}, Text height: ${txt.height}`);
-        let rect = canvas.getBoundingClientRect();
-        let mouseX = e.clientX - rect.left;
-        let mouseY = e.clientY - rect.top;
-
-        if (
-            mouseX >= txt.startX &&
-            mouseX <= txt.startX + txt.width &&
-            mouseY >= txt.startY - txt.height &&
-            mouseY <= txt.startY
-        ) {
-            canvas.style.cursor = 'pointer';
-            console.log('over');
-        } else {
-            canvas.style.cursor = 'default';
-        }
-    });
 }
 
 function hideBgCanvas() {

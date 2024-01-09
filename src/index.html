@@ -19,16 +19,12 @@
             <div class="container__settings">
                 <div class="btn__upload">
                     <label for="upload" id="upload-btn">Загрузить изображение</label>
-                    <input type="file" name="upload" id="upload" accept="image/*">
+                    <input type="file" name="upload" id="upload" accept="image/*" />
                 </div>
                 <div class="settings__text" id="text-settings"></div>
                 <button class="btn__addText" id="addText-btn">Добавить текст</button>
                 <div class="settings__btns" id="settings__btns">
-                    <button class="settings__btns__dowload" id="download-btn" disabled>Сохранить</button>
-                    <button class="settings__btns__reset" id="reset-btn">
-                        <img class="settings__btns__reset__img" src="./assets/img/reset.svg" alt="reset">
-                        <span class="settings__btns__reset__txt">Сбросить</span>
-                    </button>
+                    <button class="settings__btns__dowload" id="download-btn">Сохранить</button>
                 </div>
             </div>
         </div>
@@ -36,10 +32,13 @@
 
     <template id="template-text">
         <div class="settings__text__main">
-            <textarea  class="settings__text__textarea"></textarea>
-            <input type="color" class="settings__text__color">
+            <textarea  class="settings__text__textarea" oninput="getTextareas()"></textarea>
+            <input 
+                type="color" 
+                class="settings__text__color" 
+                oninput="getColor(this)" />
             <button class="settings__text__btn" id="editText-btn" onclick="showEditMenu(this)">
-                <img src="./assets/img/edit.svg" class="settings__text__btn__img"  alt="edit">
+                <img src="./assets/img/edit.svg" class="settings__text__btn__img"  alt="edit" />
             </button>
         </div>
 
@@ -47,9 +46,29 @@
             <li class="settings__text__menu__item" id="deleteTextarea-btn" onclick="deleteTextarea(this)">Удалить</li>
             <li class="settings__text__menu__item">
                 <div class="settings__text__menu__fontstyle__container">
-                    <span class="settings__text__menu__fontstyle__item" id="boldFont-btn">B</span>
-                    <span class="settings__text__menu__fontstyle__item" id="italicFont-btn">I</span>
-                    <span class="settings__text__menu__fontstyle__item" id="underlineFont-btn">U</span>
+                    <label class="settings__text__menu__fontstyle__items">N
+                        <input 
+                            type="radio" 
+                            class="settings__text__menu__fontstyle__item" 
+                            value="normal"
+                            onchange="getFontStyle(this)"
+                            checked />
+                    </label>
+                    <label class="settings__text__menu__fontstyle__items boldFont-btn">B
+                        <input 
+                            type="radio" 
+                            class="settings__text__menu__fontstyle__item" 
+                            value="bold"
+                            onchange="getFontStyle(this)" />
+                    </label>
+                    <label class="settings__text__menu__fontstyle__items italicFont-btn" >I
+                        <input 
+                            type="radio" 
+                            class="settings__text__menu__fontstyle__item" 
+                            value="italic"
+                            onchange="getFontStyle(this)" />
+                    </label>
+                    
                 </div>
             </li>
             <li class="settings__text__menu__item">Размер шрифта:
@@ -57,15 +76,14 @@
                     type="range" 
                     name="fontSize" 
                     class="input__range" 
-                    id="fontSize-input"
+                    oninput="getFontSize(this)"
                     min="0"
-                    max="50">
+                    max="50" />
             </li>
         </div>
     </template>
     
 
     <script src="js/main.js"></script>
-    <script src="js/upload-image.js"></script>
 </body>
 </html>

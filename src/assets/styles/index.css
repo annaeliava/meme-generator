@@ -7,13 +7,13 @@ button {
     cursor: pointer;
 }
 
-button:disabled {
+.settings__btns__dowload:disabled {
     border-color: #6E6E6D;
     background-color: #6E6E6D;
     color: #F5F5F5;
 }
 
-button:disabled:hover {
+.settings__btns__dowload:disabled:hover {
     color: #F5F5F5;
     cursor: auto;
 }
@@ -214,6 +214,13 @@ li {
     justify-content: space-between;
 }
 
+.settings__text__menu__fontstyle__items {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+}
+
 .settings__text__menu__fontstyle__item {
     cursor: pointer;
 }
@@ -222,16 +229,12 @@ li {
     color: #0063B2;
 }
 
-#boldFont-btn {
+.boldFont-btn {
     font-weight: 800;
 }
 
-#italicFont-btn {
+.italicFont-btn {
     font-style: italic;
-}
-
-#underlineFont-btn {
-    text-decoration: underline;
 }
 
 .input__range {
